@@ -1,9 +1,8 @@
 import random
 
-ver = "v1.0 release"
-whatsnew = """Added support for formatting drives
-Added this feature and the greeting messages
-Added version numbers"""
+ver = "v1.1 release"
+whatsnew = """Added motd command
+Better support for cd; no funky error messages"""
 motd = [
     "Also avaliable on pastebin!",
     "Type whatsnew to get latest changelog!",
@@ -12,8 +11,10 @@ motd = [
     "type cd \"%%\" i dare you",
     "Don't forget: $0 | $0 is a virus!",
     "hehe command go brrr",
-    "hehe \"format c: /P:0 /FS:ntfs\" go brrr"
-    "Is it just me or did the code get longer when I added these?"
+    "hehe \"format c: /P:0 /FS:ntfs\" go brrr",
+    "Is it just me or did the code get longer when I added these?",
+    "String indice out of range",
+    "Replying to motd[2]: We did! You just don't see color often in a terminal"
     ]
 
 print("PyConsole " + ver)
@@ -26,7 +27,7 @@ exit = False
 while not exit:
     try:
         path = os.getcwd()
-        comm = input(path + "> ")
+        comm = input("PyCon " + path + "> ")
         if comm == "exit":
             exit = True
             print("Exiting")
@@ -34,17 +35,21 @@ while not exit:
             comm = comm.removeprefix("cd ")
             try:
                 os.chdir(comm)
-            except FileNotFoundError:
-                print("That file or directory doesn't exist here.")
-            except OSError:
-                print("Are you sure that's a folder?")
+            except BaseException:
+                os.system('cd ' + comm)
             print()
         elif comm == "whatsnew":
             print("\n" + ver)
             print(whatsnew)
-        elif comm.startswith("format c:"):
+        elif comm.startswith("format ") and (comm.__contains__('c:') or comm.__contains__('C:')) and os.name == 'nt':
             print("""Were you really trying to kill this computer?
 You know I won't let you do that.""")
+        elif comm.startswith("motd "):
+            comm = comm.removeprefix("motd ")
+            try:
+                print(motd[int(comm)])
+            except IndexError:
+                print("That isn't a valid motd.")
         else:
             os.system(comm)
             print()
