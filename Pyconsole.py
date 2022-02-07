@@ -50,7 +50,7 @@ You know I won't let you do that.""")
                 print(motd[int(comm)])
             except IndexError:
                 print("That isn't a valid motd.")
-            except BaseException:
+            except ValueError:
                 print("That isn't a number.")
         else:
             os.system(comm)
